@@ -1,0 +1,174 @@
+/* ============================================
+   IMPORT TAILWIND
+   ============================================ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   DESIGN SYSTEM — CSS CUSTOM PROPERTIES
+   ============================================ */
+:root {
+  /* Background */
+  --bg-base:       #0a0c0f;
+  --bg-surface:    #111318;
+  --bg-elevated:   #181c23;
+  --bg-overlay:    #1e2330;
+
+  /* Primary Accent — Amber/Phosphor */
+  --accent:        #f0a500;
+  --accent-dim:    #a87200;
+  --accent-glow:   rgba(240, 165, 0, 0.15);
+
+  /* Text */
+  --text-primary:  #e8e6d9;
+  --text-secondary:#8a8678;
+  --text-muted:    #4a4840;
+  --text-accent:   #f0a500;
+
+  /* Semantic */
+  --success:       #4caf7d;
+  --error:         #e05c5c;
+  --warning:       #e0a84a;
+
+  /* Border */
+  --border:        #252830;
+  --border-active: #f0a500;
+  --border-subtle: #1a1d24;
+
+  /* Misc */
+  --scanline-opacity: 0.03;
+
+  /* Type Scale */
+  --text-xs:   0.75rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.375rem;
+  --text-2xl:  1.75rem;
+  --text-3xl:  2.5rem;
+
+  --leading-tight:  1.2;
+  --leading-normal: 1.5;
+  --leading-code:   1.7;
+
+  --tracking-wide:  0.08em;
+  --tracking-wider: 0.15em;
+
+  /* Spacing */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.25rem;
+  --space-6:  1.5rem;
+  --space-8:  2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* Layout */
+  --container-max:  1100px;
+
+  /* Radius */
+  --radius-sm:   2px;
+  --radius-base: 4px;
+  --radius-md:   6px;
+  --radius-lg:   10px;
+
+  /* Border width */
+  --border-width: 1px;
+  --border-width-thick: 2px;
+}
+
+/* ============================================
+   GLOBAL RESET & BASE STYLES
+   ============================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Efek scanline halus di seluruh halaman */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, var(--scanline-opacity)) 2px,
+    rgba(0, 0, 0, var(--scanline-opacity)) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================
+   TRANSISI GLOBAL
+   ============================================ */
+* {
+  transition-property: color, background-color, border-color, box-shadow, opacity;
+  transition-duration: 150ms;
+  transition-timing-function: ease;
+}
+
+/* ============================================
+   RESPONSIVE HELPER
+   ============================================ */
+@media (max-width: 768px) {
+  .text-io-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ============================================
+   SCROLLBAR STYLING (webkit)
+   ============================================ */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-base);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-dim);
+}
+
+/* ============================================
+   SELECTION
+   ============================================ */
+::selection {
+  background: var(--accent-glow);
+  color: var(--text-accent);
+}
