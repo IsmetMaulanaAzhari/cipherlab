@@ -13,6 +13,12 @@ const CATEGORY_LABELS: Record<CipherCategory, string> = {
   product: "Product Cipher — Super Enkripsi",
 };
 
+const CATEGORY_SHORT: Record<CipherCategory, string> = {
+  substitution: "SUB",
+  transposition: "TRN",
+  product: "PRD",
+};
+
 /** Ikon kategori */
 const CATEGORY_ICONS: Record<CipherCategory, string> = {
   substitution: "⟳",
@@ -113,8 +119,8 @@ export function CipherSelector({
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
-                gap: "var(--space-3)",
+                gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
+                gap: "var(--space-4)",
               }}
             >
               {items.map((cipher) => {
@@ -123,6 +129,7 @@ export function CipherSelector({
                   <CipherCard
                     key={cipher.id}
                     cipher={cipher}
+                    category={category}
                     isSelected={isSelected}
                     onSelect={onSelect}
                   />
@@ -140,60 +147,64 @@ export function CipherSelector({
 
 interface CipherCardProps {
   cipher: CipherDefinition;
+  category: CipherCategory;
   isSelected: boolean;
   onSelect: (id: string) => void;
 }
 
-function CipherCard({ cipher, isSelected, onSelect }: CipherCardProps) {
+function CipherCard({ cipher, category, isSelected, onSelect }: CipherCardProps) {
   return (
     <button
       onClick={() => onSelect(cipher.id)}
       style={{
-        background: isSelected ? "var(--accent-glow)" : "var(--bg-surface)",
+        background: isSelected
+          ? "linear-gradient(135deg, rgba(58, 213, 123, 0.2), rgba(10, 20, 14, 0.9))"
+          : "linear-gradient(140deg, rgba(13, 30, 22, 0.92), rgba(8, 15, 11, 0.96))",
         border: isSelected
           ? "2px solid var(--accent)"
           : "1px solid var(--border)",
-        borderRadius: "var(--radius-base)",
+        borderRadius: "var(--radius-md)",
         padding: "var(--space-4) var(--space-5)",
         textAlign: "left",
         cursor: "pointer",
-        minHeight: "90px",
+        minHeight: "120px",
         display: "flex",
         flexDirection: "column",
-        gap: "var(--space-2)",
+        justifyContent: "space-between",
+        gap: "var(--space-3)",
         width: "100%",
-        boxShadow: isSelected ? "0 0 12px var(--accent-glow)" : "none",
+        boxShadow: isSelected
+          ? "0 0 0 1px rgba(58, 213, 123, 0.25), 0 0 18px var(--accent-glow)"
+          : "0 6px 20px rgba(0, 0, 0, 0.2)",
       }}
       onMouseEnter={(e) => {
         if (!isSelected) {
           const el = e.currentTarget;
-          el.style.background = "var(--bg-overlay)";
+          el.style.background =
+            "linear-gradient(140deg, rgba(19, 44, 32, 0.95), rgba(9, 17, 12, 0.98))";
           el.style.borderColor = "var(--border-active)";
-          el.style.boxShadow = "0 0 12px var(--accent-glow)";
+          el.style.boxShadow = "0 0 16px var(--accent-glow)";
         }
       }}
       onMouseLeave={(e) => {
         if (!isSelected) {
           const el = e.currentTarget;
-          el.style.background = "var(--bg-surface)";
+          el.style.background =
+            "linear-gradient(140deg, rgba(13, 30, 22, 0.92), rgba(8, 15, 11, 0.96))";
           el.style.borderColor = "var(--border)";
-          el.style.boxShadow = "none";
+          el.style.boxShadow = "0 6px 20px rgba(0, 0, 0, 0.2)";
         }
       }}
     >
       {/* Indikator + nama */}
       <div
-        style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "var(--space-2)",
+        }}
       >
-        <span
-          style={{
-            color: isSelected ? "var(--text-accent)" : "var(--text-muted)",
-            fontSize: "var(--text-xs)",
-            lineHeight: 1,
-          }}
-        >
-          ▸
-        </span>
         <span
           style={{
             fontFamily: "Rajdhani, sans-serif",
@@ -206,6 +217,19 @@ function CipherCard({ cipher, isSelected, onSelect }: CipherCardProps) {
           }}
         >
           {cipher.name}
+        </span>
+        <span
+          style={{
+            fontFamily: "'Share Tech Mono', monospace",
+            fontSize: "var(--text-xs)",
+            letterSpacing: "var(--tracking-wider)",
+            color: isSelected ? "var(--text-accent)" : "var(--text-secondary)",
+            border: "1px solid var(--border)",
+            borderRadius: "var(--radius-sm)",
+            padding: "2px 6px",
+          }}
+        >
+          {CATEGORY_SHORT[category]}
         </span>
       </div>
 

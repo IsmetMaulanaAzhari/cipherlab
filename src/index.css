@@ -10,21 +10,21 @@
    ============================================ */
 :root {
   /* Background */
-  --bg-base:       #0a0c0f;
-  --bg-surface:    #111318;
-  --bg-elevated:   #181c23;
-  --bg-overlay:    #1e2330;
+  --bg-base:       #060b07;
+  --bg-surface:    #0b1510;
+  --bg-elevated:   #112019;
+  --bg-overlay:    #173127;
 
-  /* Primary Accent — Amber/Phosphor */
-  --accent:        #f0a500;
-  --accent-dim:    #a87200;
-  --accent-glow:   rgba(240, 165, 0, 0.15);
+  /* Primary Accent — Green Phosphor */
+  --accent:        #3ad57b;
+  --accent-dim:    #1f7a47;
+  --accent-glow:   rgba(58, 213, 123, 0.16);
 
   /* Text */
-  --text-primary:  #e8e6d9;
-  --text-secondary:#8a8678;
-  --text-muted:    #4a4840;
-  --text-accent:   #f0a500;
+  --text-primary:  #d6ffe8;
+  --text-secondary:#86c6a0;
+  --text-muted:    #4a7a60;
+  --text-accent:   #3ad57b;
 
   /* Semantic */
   --success:       #4caf7d;
@@ -32,9 +32,9 @@
   --warning:       #e0a84a;
 
   /* Border */
-  --border:        #252830;
-  --border-active: #f0a500;
-  --border-subtle: #1a1d24;
+  --border:        #214435;
+  --border-active: #3ad57b;
+  --border-subtle: #15271f;
 
   /* Misc */
   --scanline-opacity: 0.03;
@@ -95,7 +95,10 @@ html, body {
 }
 
 body {
-  background-color: var(--bg-base);
+  background:
+    radial-gradient(circle at 10% 0%, rgba(58, 213, 123, 0.12), transparent 40%),
+    radial-gradient(circle at 90% 100%, rgba(70, 130, 90, 0.18), transparent 45%),
+    linear-gradient(180deg, #050905 0%, var(--bg-base) 45%, #050a06 100%);
   color: var(--text-primary);
   font-family: 'Rajdhani', sans-serif;
   font-size: var(--text-base);
@@ -104,20 +107,24 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Efek scanline halus di seluruh halaman */
+/* Efek grid + scanline untuk nuansa terminal */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, var(--scanline-opacity)) 2px,
-    rgba(0, 0, 0, var(--scanline-opacity)) 4px
-  );
+  background:
+    linear-gradient(rgba(58, 213, 123, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(58, 213, 123, 0.03) 1px, transparent 1px),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, var(--scanline-opacity)) 2px,
+      rgba(0, 0, 0, var(--scanline-opacity)) 4px
+    );
+  background-size: 32px 32px, 32px 32px, auto;
   pointer-events: none;
-  z-index: 9999;
+  z-index: -1;
 }
 
 #root {
@@ -171,4 +178,33 @@ body::before {
 ::selection {
   background: var(--accent-glow);
   color: var(--text-accent);
+}
+
+.terminal-shell {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(180deg, rgba(10, 24, 17, 0.95), rgba(8, 18, 13, 0.95));
+  box-shadow: 0 0 0 1px rgba(58, 213, 123, 0.06), 0 18px 40px rgba(0, 0, 0, 0.35);
+}
+
+.terminal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-5);
+  border-bottom: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.terminal-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.terminal-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--text-muted);
 }
