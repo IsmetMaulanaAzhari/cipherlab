@@ -4,6 +4,29 @@ import { CipherInfo } from "../components/CipherInfo";
 import { CipherForm } from "../components/CipherForm";
 import { TextIO } from "../components/TextIO";
 
+const LOGIC_HINTS: Record<string, string> = {
+  caesar: "Substitusi linear: huruf digeser berdasarkan nilai shift modulo 26.",
+  rot13: "Substitusi tetap: Caesar shift 13, sehingga encrypt dan decrypt identik.",
+  atbash: "Substitusi cermin: A<->Z, B<->Y, dst. Bersifat self-inverse.",
+  vigenere:
+    "Substitusi polialfabetik: setiap huruf digeser oleh huruf kunci yang berulang.",
+  playfair:
+    "Substitusi digraf: teks diproses per pasangan huruf pada matriks 5x5.",
+  affine:
+    "Substitusi afine: E(x) = (a*x + b) mod 26, decrypt memakai invers modular a.",
+  hill: "Substitusi matriks: pasangan huruf dikalikan matriks kunci 2x2 modulo 26.",
+  enigma:
+    "Substitusi rotor dinamis: rotor berputar tiap karakter, lalu sinyal dipantulkan reflector.",
+  homophonic:
+    "Substitusi probabilistik: satu huruf punya beberapa kode 2 digit untuk meratakan frekuensi.",
+  railfence:
+    "Transposisi zigzag: karakter disusun ke rel lalu dibaca per rel.",
+  columnar:
+    "Transposisi kolom: teks masuk tabel, lalu kolom dibaca menurut urutan alfabet kunci.",
+  product:
+    "Product cipher berlapis: Vigenere dulu, kemudian transposisi kolom.",
+};
+
 /**
  * Halaman utama — playground untuk enkripsi dan dekripsi teks.
  * Menyatukan semua komponen utama dengan state dari useCipher hook.
@@ -31,40 +54,60 @@ export function Home() {
       style={{
         maxWidth: "var(--container-max)",
         margin: "0 auto",
-        padding: "var(--space-8)",
+        padding: "var(--space-8) var(--space-6)",
         display: "flex",
         flexDirection: "column",
-        gap: "var(--space-8)",
+        gap: "var(--space-6)",
       }}
     >
       {/* Hero section */}
-      <div>
-        <h1
-          style={{
-            fontFamily: "Rajdhani, sans-serif",
-            fontWeight: 700,
-            fontSize: "var(--text-3xl)",
-            letterSpacing: "var(--tracking-wide)",
-            textTransform: "uppercase",
-            color: "var(--text-primary)",
-            margin: "0 0 var(--space-2) 0",
-            lineHeight: "var(--leading-tight)",
-          }}
-        >
-          Kriptografi{" "}
-          <span style={{ color: "var(--text-accent)" }}>Klasik</span>
-        </h1>
-        <p
-          style={{
-            fontFamily: "Rajdhani, sans-serif",
-            fontSize: "var(--text-lg)",
-            color: "var(--text-secondary)",
-            margin: 0,
-            lineHeight: "var(--leading-normal)",
-          }}
-        >
-          Enkripsi dan dekripsi teks menggunakan metode kriptografi tradisional.
-        </p>
+      <div className="terminal-shell">
+        <div className="terminal-header">
+          <div className="terminal-dots" aria-hidden="true">
+            <span className="terminal-dot" />
+            <span className="terminal-dot" />
+            <span className="terminal-dot" />
+          </div>
+          <p
+            style={{
+              margin: 0,
+              fontFamily: "'Share Tech Mono', monospace",
+              fontSize: "var(--text-xs)",
+              letterSpacing: "var(--tracking-wider)",
+              color: "var(--text-secondary)",
+            }}
+          >
+            CIPHERLAB // INTERACTIVE CLASSICAL CRYPTO CONSOLE
+          </p>
+        </div>
+        <div style={{ padding: "var(--space-6)" }}>
+          <h1
+            style={{
+              fontFamily: "Rajdhani, sans-serif",
+              fontWeight: 700,
+              fontSize: "var(--text-3xl)",
+              letterSpacing: "var(--tracking-wide)",
+              textTransform: "uppercase",
+              color: "var(--text-primary)",
+              margin: "0 0 var(--space-2) 0",
+              lineHeight: "var(--leading-tight)",
+            }}
+          >
+            Kriptografi{" "}
+            <span style={{ color: "var(--text-accent)" }}>Klasik</span>
+          </h1>
+          <p
+            style={{
+              fontFamily: "Rajdhani, sans-serif",
+              fontSize: "var(--text-lg)",
+              color: "var(--text-secondary)",
+              margin: 0,
+              lineHeight: "var(--leading-normal)",
+            }}
+          >
+            Eksperimen enkripsi dan dekripsi berbasis metode klasik, langsung di browser.
+          </p>
+        </div>
       </div>
 
       {/* Divider */}
@@ -80,6 +123,35 @@ export function Home() {
       {/* Panel yang muncul setelah cipher dipilih */}
       {selectedCipher && (
         <>
+          <div
+            className="terminal-shell"
+            style={{ padding: "var(--space-5)", display: "grid", gap: "var(--space-3)" }}
+          >
+            <p
+              style={{
+                margin: 0,
+                fontFamily: "'Share Tech Mono', monospace",
+                fontSize: "var(--text-xs)",
+                color: "var(--text-secondary)",
+                letterSpacing: "var(--tracking-wider)",
+                textTransform: "uppercase",
+              }}
+            >
+              Logika Metode Aktif
+            </p>
+            <p
+              style={{
+                margin: 0,
+                fontFamily: "Rajdhani, sans-serif",
+                fontSize: "var(--text-lg)",
+                lineHeight: "var(--leading-normal)",
+                color: "var(--text-primary)",
+              }}
+            >
+              {LOGIC_HINTS[selectedCipher.id] ?? "Cipher aktif menggunakan aturan transformasi khusus sesuai implementasinya."}
+            </p>
+          </div>
+
           {/* Info panel */}
           <CipherInfo cipher={selectedCipher} />
 
