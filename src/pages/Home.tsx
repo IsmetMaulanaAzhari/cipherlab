@@ -3,6 +3,7 @@ import { CipherSelector } from "../components/CipherSelector";
 import { CipherInfo } from "../components/CipherInfo";
 import { CipherForm } from "../components/CipherForm";
 import { TextIO } from "../components/TextIO";
+import { useRef, useEffect } from "react";
 
 const LOGIC_HINTS: Record<string, string> = {
   caesar: "Substitusi linear: huruf digeser berdasarkan nilai shift modulo 26.",
@@ -48,6 +49,18 @@ export function Home() {
     reset,
     swapTexts,
   } = useCipher();
+
+  // Ref untuk auto-scroll ke form ketika cipher dipilih
+  const formSectionRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll ke form ketika cipher berubah
+  useEffect(() => {
+    if (selectedCipher && formSectionRef.current) {
+      setTimeout(() => {
+        formSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+    }
+  }, [selectedCipher]);
 
   return (
     <div
@@ -121,8 +134,8 @@ export function Home() {
       />
 
       {/* Panel yang muncul setelah cipher dipilih */}
-      {selectedCipher && (
-        <>
+        {selectedCipher && (
+          <div ref={formSectionRef}>
           <div
             className="terminal-shell"
             style={{ padding: "var(--space-5)", display: "grid", gap: "var(--space-3)" }}
@@ -226,8 +239,13 @@ export function Home() {
             onConvert={convert}
             onSwap={swapTexts}
             onReset={reset}
+              onChangeCipher={() => {
+                selectCipher(""); // deselect cipher
+                // Scroll back to cipher selector
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
           />
-        </>
+          </div>
       )}
 
       {/* Placeholder saat belum memilih cipher */}

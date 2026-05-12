@@ -11,6 +11,7 @@ interface TextIOProps {
   onConvert: () => void;
   onSwap: () => void;
   onReset: () => void;
+  onChangeCipher?: () => void;
 }
 
 /**
@@ -27,6 +28,7 @@ export function TextIO({
   onConvert,
   onSwap,
   onReset,
+  onChangeCipher,
 }: TextIOProps) {
   const [copied, setCopied] = useState(false);
 
@@ -41,6 +43,18 @@ export function TextIO({
       // Fallback diam-diam jika browser tidak mendukung clipboard API
     }
   };
+
+    // Download hasil sebagai file .txt
+    const handleDownload = () => {
+      if (!outputText) return;
+      const element = document.createElement("a");
+      const file = new Blob([outputText], { type: "text/plain" });
+      element.href = URL.createObjectURL(file);
+      element.download = `cipherlab-result-${Date.now()}.txt`;
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    };
 
   const textareaStyle: CSSProperties = {
     width: "100%",
@@ -236,6 +250,70 @@ export function TextIO({
         >
           ⇄ Balik
         </button>
+
+          {/* Tombol Download Hasil */}
+          <button
+            onClick={handleDownload}
+            disabled={!outputText}
+            style={{
+              padding: "var(--space-3) var(--space-5)",
+              background: "transparent",
+              color: outputText ? "var(--accent)" : "var(--text-muted)",
+              border: outputText
+                ? "1px solid var(--accent-dim)"
+                : "1px solid var(--border)",
+              borderRadius: "var(--radius-base)",
+              fontFamily: "Rajdhani, sans-serif",
+              fontWeight: 600,
+              fontSize: "var(--text-base)",
+              letterSpacing: "var(--tracking-wide)",
+              textTransform: "uppercase",
+              cursor: outputText ? "pointer" : "not-allowed",
+              transition: "background 0.15s ease",
+            }}
+            onMouseEnter={(e) => {
+              if (outputText)
+                e.currentTarget.style.background = "var(--accent-glow)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "transparent";
+            }}
+          >
+            ⬇ Download
+          </button>
+
+          {/* Tombol Ubah Metode — kembali ke selector cipher */}
+          {onChangeCipher && (
+            <button
+              onClick={onChangeCipher}
+              style={{
+                padding: "var(--space-3) var(--space-5)",
+                background: "transparent",
+                color: "var(--text-secondary)",
+                border: "1px solid var(--border)",
+                borderRadius: "var(--radius-base)",
+                fontFamily: "Rajdhani, sans-serif",
+                fontWeight: 600,
+                fontSize: "var(--text-base)",
+                letterSpacing: "var(--tracking-wide)",
+                textTransform: "uppercase",
+                cursor: "pointer",
+                transition: "background 0.15s ease, color 0.15s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = "var(--accent)";
+                e.currentTarget.style.borderColor = "var(--accent-dim)";
+                e.currentTarget.style.background = "var(--accent-glow)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = "var(--text-secondary)";
+                e.currentTarget.style.borderColor = "var(--border)";
+                e.currentTarget.style.background = "transparent";
+              }}
+            >
+              ⟳ Ubah Metode
+            </button>
+          )}
 
         {/* Tombol Reset — bersihkan semua teks dan parameter */}
         <button
