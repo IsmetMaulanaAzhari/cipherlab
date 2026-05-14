@@ -45,6 +45,8 @@ export function Home() {
     setMode,
     setParam,
     setInputText,
+    livePreviewEnabled,
+    setLivePreviewEnabled,
     convert,
     reset,
     swapTexts,
@@ -235,10 +237,12 @@ export function Home() {
             inputText={inputText}
             outputText={outputText}
             error={error}
+            livePreviewEnabled={livePreviewEnabled}
             onInputChange={setInputText}
             onConvert={convert}
             onSwap={swapTexts}
             onReset={reset}
+            onToggleLivePreview={setLivePreviewEnabled}
               onChangeCipher={() => {
                 selectCipher(""); // deselect cipher
                 // Scroll back to cipher selector

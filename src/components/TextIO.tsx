@@ -7,10 +7,12 @@ interface TextIOProps {
   inputText: string;
   outputText: string;
   error: string | null;
+  livePreviewEnabled: boolean;
   onInputChange: (text: string) => void;
   onConvert: () => void;
   onSwap: () => void;
   onReset: () => void;
+  onToggleLivePreview: (enabled: boolean) => void;
   onChangeCipher?: () => void;
 }
 
@@ -24,10 +26,12 @@ export function TextIO({
   inputText,
   outputText,
   error,
+  livePreviewEnabled,
   onInputChange,
   onConvert,
   onSwap,
   onReset,
+  onToggleLivePreview,
   onChangeCipher,
 }: TextIOProps) {
   const [copied, setCopied] = useState(false);
@@ -187,6 +191,39 @@ export function TextIO({
           }}
         >
           {mode === "encrypt" ? "Enkripsi" : "Dekripsi"}
+        </button>
+
+        {/* Toggle live preview */}
+        <button
+          onClick={() => onToggleLivePreview(!livePreviewEnabled)}
+          style={{
+            padding: "var(--space-3) var(--space-5)",
+            background: livePreviewEnabled ? "rgba(58,213,123,0.14)" : "transparent",
+            color: livePreviewEnabled ? "var(--accent)" : "var(--text-secondary)",
+            border: livePreviewEnabled
+              ? "1px solid var(--accent)"
+              : "1px solid var(--border)",
+            borderRadius: "var(--radius-base)",
+            fontFamily: "Rajdhani, sans-serif",
+            fontWeight: 600,
+            fontSize: "var(--text-base)",
+            letterSpacing: "var(--tracking-wide)",
+            textTransform: "uppercase",
+            cursor: "pointer",
+            transition: "background 0.15s ease, color 0.15s ease, border-color 0.15s ease",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = livePreviewEnabled
+              ? "rgba(58,213,123,0.2)"
+              : "var(--accent-glow)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = livePreviewEnabled
+              ? "rgba(58,213,123,0.14)"
+              : "transparent";
+          }}
+        >
+          {livePreviewEnabled ? "Live: On" : "Live: Off"}
         </button>
 
         {/* Tombol Salin Hasil */}

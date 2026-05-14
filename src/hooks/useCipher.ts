@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import type { CipherDefinition } from "../types/cipher";
 import { CIPHER_REGISTRY } from "../ciphers/index";
 
@@ -22,6 +22,8 @@ interface UseCipherReturn extends CipherState {
   setMode: (mode: CipherMode) => void;
   setParam: (key: string, value: string) => void;
   setInputText: (text: string) => void;
+  livePreviewEnabled: boolean;
+  setLivePreviewEnabled: (enabled: boolean) => void;
   convert: () => void;
   reset: () => void;
   swapTexts: () => void;
@@ -40,6 +42,7 @@ export function useCipher(): UseCipherReturn {
     outputText: "",
     error: null,
   });
+  const [livePreviewEnabled, setLivePreviewEnabled] = useState(false);
 
   /** Pilih cipher baru, reset semua state lainnya */
   const selectCipher = useCallback((id: string) => {
@@ -70,6 +73,10 @@ export function useCipher(): UseCipherReturn {
   /** Update teks input */
   const setInputText = useCallback((text: string) => {
     setState((prev) => ({ ...prev, inputText: text, error: null }));
+  }, []);
+
+  const setLivePreviewEnabledSafe = useCallback((enabled: boolean) => {
+    setLivePreviewEnabled(enabled);
   }, []);
 
   /** Jalankan enkripsi atau dekripsi */
@@ -113,14 +120,6 @@ export function useCipher(): UseCipherReturn {
             };
           }
         }
-        if (param.type === "text") {
-          if (!/[a-zA-Z]/.test(params[param.key])) {
-            return {
-              ...prev,
-              error: `"${param.label}" harus mengandung setidaknya satu huruf.`,
-            };
-          }
-        }
       }
 
       try {
@@ -136,6 +135,35 @@ export function useCipher(): UseCipherReturn {
       }
     });
   }, []);
+
+  // Live preview manual: hanya jalan jika user mengaktifkannya.
+  useEffect(() => {
+    if (!livePreviewEnabled || !state.selectedCipher) {
+      return;
+    }
+
+    const hasInput = state.inputText.trim().length > 0;
+    const hasAllParams = state.selectedCipher.params.every(
+      (param) => state.params[param.key]?.trim(),
+    );
+
+    if (!hasInput || !hasAllParams) {
+      setState((prev) =>
+        prev.outputText || prev.error
+          ? { ...prev, outputText: "", error: null }
+          : prev,
+      );
+      return;
+    }
+
+    convert();
+  }, [
+    convert,
+    livePreviewEnabled,
+    state.inputText,
+    state.params,
+    state.selectedCipher,
+  ]);
 
   /** Tukar input dan output (serta balik mode) */
   const swapTexts = useCallback(() => {
@@ -166,6 +194,8 @@ export function useCipher(): UseCipherReturn {
     setMode,
     setParam,
     setInputText,
+    livePreviewEnabled,
+    setLivePreviewEnabled: setLivePreviewEnabledSafe,
     convert,
     reset,
     swapTexts,
