@@ -3,6 +3,7 @@ import { CipherSelector } from "../components/CipherSelector";
 import { CipherInfo } from "../components/CipherInfo";
 import { EnigmaVisualizer } from "../components/visualizers/EnigmaVisualizer";
 import { HillVisualizer } from "../components/visualizers/HillVisualizer";
+import CipherExamples from "../components/CipherExamples";
 import { CipherForm } from "../components/CipherForm";
 import { TextIO } from "../components/TextIO";
 import { useRef, useEffect } from "react";
@@ -170,7 +171,10 @@ export function Home() {
           </div>
 
           {/* Info panel */}
-          <CipherInfo cipher={selectedCipher} />
+          <div className="space-y-4">
+            <CipherInfo cipher={selectedCipher} />
+            <CipherExamples />
+          </div>
 
           {/* Visualizer khusus untuk beberapa cipher */}
           {selectedCipher.id === "enigma" && (

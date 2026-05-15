@@ -281,3 +281,45 @@ Dengan desain ini, penambahan cipher baru cukup dengan:
 1. Membuat file cipher baru yang sesuai interface
 2. Menambahkan ke registry `CIPHER_REGISTRY`
 3. UI otomatis dapat merender parameter dan menjalankan algoritma melalui alur yang sama
+
+## Contoh Interaktif
+
+CipherLab kini menyediakan panel _Contoh Interaktif_ pada halaman utama. Panel ini berisi contoh siap pakai untuk beberapa cipher populer (mis. Caesar, Vigenère, Enigma, Hill). Fitur ini memungkinkan pengguna untuk:
+
+- Memuat contoh ke form parameter dan area input dengan satu klik
+- Mencoba variasi parameter tanpa mengetik manual
+- Memahami perbedaan perilaku tiap cipher dengan cepat
+
+Lokasi komponen contoh: `src/components/CipherExamples.tsx`.
+
+Menambah contoh baru:
+
+1. Buka `src/components/CipherExamples.tsx`.
+2. Tambahkan objek contoh baru di array `EXAMPLES` dengan properti `cipherId`, `params`, `input`, dan `mode`.
+
+Contoh pengembang:
+
+```ts
+// contoh baru di EXAMPLES
+{
+  id: "my-example",
+  cipherId: "caesar",
+  name: "Caesar example",
+  description: "Shift 5",
+  params: { shift: "5" },
+  input: "HELLO",
+  mode: "encrypt",
+}
+```
+
+## Catatan Pengembang
+
+- Komponen contoh menggunakan hook `useCipher()` untuk mengisi state aplikasi (memanggil `selectCipher`, `setParam`, `setInputText`, dll.).
+- Pastikan nama parameter yang digunakan di `params` cocok dengan `cipher.params` pada definisi cipher.
+- Jalankan test suite setelah perubahan:
+
+```bash
+npm install
+npm test
+```
+
