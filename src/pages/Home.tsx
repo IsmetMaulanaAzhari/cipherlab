@@ -1,6 +1,8 @@
 import { useCipher } from "../hooks/useCipher";
 import { CipherSelector } from "../components/CipherSelector";
 import { CipherInfo } from "../components/CipherInfo";
+import { EnigmaVisualizer } from "../components/visualizers/EnigmaVisualizer";
+import { HillVisualizer } from "../components/visualizers/HillVisualizer";
 import { CipherForm } from "../components/CipherForm";
 import { TextIO } from "../components/TextIO";
 import { useRef, useEffect } from "react";
@@ -169,6 +171,19 @@ export function Home() {
 
           {/* Info panel */}
           <CipherInfo cipher={selectedCipher} />
+
+          {/* Visualizer khusus untuk beberapa cipher */}
+          {selectedCipher.id === "enigma" && (
+            <EnigmaVisualizer
+              rotors={params.rotors ?? "1 2 3"}
+              positions={params.positions ?? "AAA"}
+              text={inputText}
+            />
+          )}
+
+          {selectedCipher.id === "hill" && (
+            <HillVisualizer keyText={params.key ?? "HILL"} text={inputText} />
+          )}
 
           {/* Divider */}
           <div style={{ height: "1px", background: "var(--border-subtle)" }} />

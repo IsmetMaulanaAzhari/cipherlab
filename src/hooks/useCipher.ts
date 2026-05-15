@@ -24,6 +24,7 @@ interface UseCipherReturn extends CipherState {
   setInputText: (text: string) => void;
   livePreviewEnabled: boolean;
   setLivePreviewEnabled: (enabled: boolean) => void;
+  livePreviewAllowed: boolean;
   convert: () => void;
   reset: () => void;
   swapTexts: () => void;
@@ -43,6 +44,8 @@ export function useCipher(): UseCipherReturn {
     error: null,
   });
   const [livePreviewEnabled, setLivePreviewEnabled] = useState(false);
+  // Daftar cipher yang diizinkan untuk live preview
+  const LIVE_PREVIEW_WHITELIST = ["caesar", "atbash", "rot13", "vigenere"];
 
   /** Pilih cipher baru, reset semua state lainnya */
   const selectCipher = useCallback((id: string) => {
@@ -196,6 +199,9 @@ export function useCipher(): UseCipherReturn {
     setInputText,
     livePreviewEnabled,
     setLivePreviewEnabled: setLivePreviewEnabledSafe,
+    livePreviewAllowed: Boolean(
+      state.selectedCipher && LIVE_PREVIEW_WHITELIST.includes(state.selectedCipher.id),
+    ),
     convert,
     reset,
     swapTexts,
